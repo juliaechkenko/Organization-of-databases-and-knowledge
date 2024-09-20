@@ -1,0 +1,110 @@
+# 1.функція для читання даних студентів із файлу
+def read_students_data(filename):
+    students = []
+    try:
+        with open(filename, 'r') as file:
+            for line in file:
+                #розбивття кожного рядка на окремі поля
+                data = line.strip().split(',')
+                student = {
+                    'StLastName': data[0].strip(),
+                    'StFirstName': data[1].strip(),
+                    'Grade': data[2].strip(),
+                    'Classroom': data[3].strip(),
+                    'Bus': data[4].strip(),
+                    'TLastName': data[5].strip(),
+                    'TFirstName': data[6].strip()
+                }
+                students.append(student)
+    except FileNotFoundError:
+        print(f"Файл {filename} не знайдено.")
+    return students
+
+
+# 2.пошук за прізвищем студента
+def search_by_student_lastname(students, lastname):
+    result = [student for student in students if student['StLastName'].lower() == lastname.lower()]
+    return result
+
+
+# 3.пошук за номером автобуса
+def search_by_bus_number(students, bus_number):
+    result = [student for student in students if student['Bus'] == str(bus_number)]
+    return result
+
+
+# 4.пошук за прізвищем викладача
+def search_by_teacher_lastname(students, teacher_lastname):
+    result = [student for student in students if student['TLastName'].lower() == teacher_lastname.lower()]
+    return result
+
+
+# 5.пошук за рівнем навчання
+def search_by_grade(students, grade):
+    result = [student for student in students if student['Grade'] == str(grade)]
+    return result
+
+
+# основна функція
+def main():
+    filename = 'C:/Users/user/PycharmProjects/lr1/students.txt'
+    students = read_students_data(filename)
+
+    if not students:
+        print("Дані про студентів не завантажено.")
+        return
+
+    while True:
+        command = input(
+            "Введіть команду (S - пошук за прізвищем студента, B - пошук за автобусом, T - пошук за вчителем, G - пошук за рівнем навчання, Q - вийти): ").strip().upper()
+
+        if command == 'Q':
+            print("Вихід із програми.")
+            break
+
+        elif command == 'S':
+            lastname = input("Введіть прізвище студента для пошуку: ")
+            result = search_by_student_lastname(students, lastname)
+            if result:
+                print("Результат пошуку за прізвищем студента:")
+                for student in result:
+                    print(student)
+            else:
+                print(f"Студент із прізвищем {lastname} не знайдений.")
+
+        elif command == 'B':
+            bus_number = input("Введіть номер автобуса для пошуку: ")
+            result = search_by_bus_number(students, bus_number)
+            if result:
+                print(f"Результат пошуку за автобусом {bus_number}:")
+                for student in result:
+                    print(student)
+            else:
+                print(f"Студенти, що користуються автобусом {bus_number}, не знайдені.")
+
+        elif command == 'T':
+            teacher_lastname = input("Введіть прізвище викладача для пошуку: ")
+            result = search_by_teacher_lastname(students, teacher_lastname)
+            if result:
+                print(f"Результат пошуку за прізвищем викладача {teacher_lastname}:")
+                for student in result:
+                    print(student)
+            else:
+                print(f"Студенти з викладачем {teacher_lastname} не знайдені.")
+
+        elif command == 'G':
+            grade = input("Введіть рівень навчання (Grade) для пошуку: ")
+            result = search_by_grade(students, grade)
+            if result:
+                print(f"Результат пошуку за рівнем навчання {grade}:")
+                for student in result:
+                    print(student)
+            else:
+                print(f"Студенти рівня навчання {grade} не знайдені.")
+
+        else:
+            print("Невідома команда, спробуйте ще раз.")
+
+
+if __name__ == "__main__":
+    main()
